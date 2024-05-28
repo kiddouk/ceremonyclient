@@ -11,6 +11,8 @@ env:
 vars:
   VERSION:
     sh: cat node/config/version.go | grep -A 1 "func GetVersion() \[\]byte {" | grep -Eo '0x[0-9a-fA-F]+' | xargs printf "%d.%d.%d"
+  PATCH_NUMBER:
+    sh: cat node/config/version.go | grep -A 1 "func GetPatchNumber() byte {" | grep -Eo '0x[0-9a-fA-F]+' | xargs printf "-p%d"
   GIT_REPO:
     sh: git config --get remote.origin.url | sed 's/\.git$//'
   GIT_BRANCH:
@@ -24,7 +26,7 @@ tasks:
     desc: Display configuration info.
     cmds:
       - echo -n "Image name:" && echo " ${QUILIBRIUM_IMAGE_NAME:-quilibrium}"
-      - echo -n "Version   :" && echo " {{.VERSION}}"
+      - echo -n "Version   :" && echo " {{.VERSION}}{{.PATCH_NUMBER}}"
       - echo -n "Repo      :" && echo " {{.GIT_REPO}}"
       - echo -n "Branch    :" && echo " {{.GIT_BRANCH}}"
       - echo -n "Commit    :" && echo " {{.GIT_COMMIT}}"
